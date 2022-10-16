@@ -1,16 +1,38 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{exenumitem-jp}[2022/10/16 SKu]
-
 \RequirePackage{enumitem}
-\RequirePackage{luatexja-otf}
 
-\newif\if@beamerclass
 \newif\if@loadonlymode
 
+\newif\if@platex
+\newif\if@uplatex
+\newif\if@lualatex
+
+\newif\if@beamerclass
+
 \DeclareOption{loadonly}{\@loadonlymodetrue}
+\DeclareOption{platex}{\@platextrue\@uplatexfalse\@lualatexfalse}
+\DeclareOption{uplatex}{\@platexfalse\@uplatextrue\@lualatexfalse}
+\DeclareOption{lualatex}{\@platexfalse\@uplatexfalse\@lualatextrue}
+\ExecuteOptions{lualatex}
 \ProcessOptions\relax
 
 \@ifclassloaded{beamer}{\@beamerclasstrue}{}
+
+\if@lualatex
+  \RequirePackage{luatexja}
+  \RequirePackage{luatexja-otf}
+\else
+  \if@platex
+    \RequirePackage[expert,deluxe]{otf}
+  \else
+    \if@uplatex
+      \RequirePackage[expert,deluxe,uplatex]{otf}
+    \else
+      \relax
+    \fi
+  \fi
+\fi
 
 \if@beamerclass
   \relax
@@ -88,12 +110,16 @@
   \def\@emroman#1{\protect\ajroman{#1}}
   \AddEnumerateCounter{\emroman}{\@emroman}{\ajroman{8}}
   
-  \def\emarabic#1{\expandafter\@emarabic\csname c@#1\endcsname}
-  \def\@emarabic#1{\expandafter\@@emarabic\number#1@}
-  \def\@@emarabic#1{%
-    \if#1@\else
-      \ifcase#1０\or １\or ２\or ３\or ４\or ５\or ６\or ７\or ８\or ９\fi
-      \expandafter\@@emarabic
-    \fi}
-  \AddEnumerateCounter{\emarabic}{\@emarabic}{１}
+  \if@lualatex
+    \def\emarabic#1{\expandafter\@emarabic\csname c@#1\endcsname}
+    \def\@emarabic#1{\expandafter\@@emarabic\number#1@}
+    \def\@@emarabic#1{%
+      \if#1@\else
+        \ifcase#1０\or １\or ２\or ３\or ４\or ５\or ６\or ７\or ８\or ９\fi
+        \expandafter\@@emarabic
+      \fi}
+    \AddEnumerateCounter{\emarabic}{\@emarabic}{１}
+  \else
+    \relax
+  \fi
 \fi
