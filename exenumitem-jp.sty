@@ -1,0 +1,99 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{exenumitem-jp}[2022/10/16 SKu]
+
+\RequirePackage{enumitem}
+\RequirePackage{luatexja-otf}
+
+\newif\if@beamerclass
+\newif\if@loadonlymode
+
+\DeclareOption{loadonly}{\@loadonlymodetrue}
+\ProcessOptions\relax
+
+\@ifclassloaded{beamer}{\@beamerclasstrue}{}
+
+\if@beamerclass
+  \relax
+\else
+  \if@loadonlymode
+    \relax
+  \else
+    \setlist{align=left,leftmargin=*}
+    \setlist[enumerate]{label=\carabic*}
+    \setlist[description]{style=nextline}
+      \setlist[enumerate,1]{label=\carabic*,labelindent=\parindent}
+      \setlist[itemize,1]{labelindent=\parindent}
+  \fi
+  \def\carabic#1{\expandafter\@carabic\csname c@#1\endcsname}
+  \def\@carabic#1{\protect\ajMaru{#1}}
+  \AddEnumerateCounter{\carabic}{\@carabic}{\ajMaru{99}}
+  
+  \def\haiu#1{\expandafter\@haiu\csname c@#1\endcsname}
+  \def\@haiu#1{\ifcase#1\or 
+    あ\or い\or う\or え\or お\or
+    か\or き\or く\or け\or こ\or
+    さ\or し\or す\or せ\or そ\or
+    た\or ち\or つ\or て\or と\or
+    な\or に\or ぬ\or ね\or の\or
+    は\or ひ\or ふ\or へ\or ほ\or
+    ま\or み\or む\or め\or も\or
+    や\or ゆ\or よ\or
+    ら\or り\or る\or れ\or ろ\or
+    わ\or を\or ん\fi}
+  \AddEnumerateCounter{\haiu}{\@haiu}{あ}
+  
+  \def\kaiu#1{\expandafter\@kaiu\csname c@#1\endcsname}
+  \def\@kaiu#1{\ifcase#1\or 
+    ア\or イ\or ウ\or エ\or オ\or
+    カ\or キ\or ク\or ケ\or コ\or
+    サ\or シ\or ス\or セ\or ソ\or
+    タ\or チ\or ツ\or テ\or ト\or
+    ナ\or ニ\or ヌ\or ネ\or ノ\or
+    ハ\or ヒ\or フ\or ヘ\or ホ\or
+    マ\or ミ\or ム\or メ\or モ\or
+    ヤ\or ユ\or ヨ\or
+    ラ\or リ\or ル\or レ\or ロ\or
+    ワ\or ヲ\or ン\fi}
+  \AddEnumerateCounter{\kaiu}{\@kaiu}{ア}
+  
+  \def\hiroha#1{\expandafter\@hiroha\csname c@#1\endcsname}
+  \def\@hiroha#1{\ifcase#1\or 
+    い\or ろ\or は\or に\or ほ\or へ\or と\or
+    ち\or り\or ぬ\or る\or を\or
+    わ\or か\or よ\or た\or れ\or そ\or 
+    つ\or ね\or な\or ら\or む\or 
+    う\or ゐ\or の\or お\or く\or や\or ま\or
+    け\or ふ\or こ\or え\or て\or
+    あ\or さ\or き\or ゆ\or め\or み\or し\or 
+    ゑ\or ひ\or も\or せ\or す\or ん\fi}
+  \AddEnumerateCounter{\hiroha}{\@hiroha}{い}
+  
+  \def\kiroha#1{\expandafter\@kiroha\csname c@#1\endcsname}
+  \def\@kiroha#1{\ifcase#1\or 
+    イ\or ロ\or ハ\or ニ\or ホ\or ヘ\or ト\or
+    チ\or リ\or ヌ\or ル\or ヲ\or
+    ワ\or カ\or ヨ\or タ\or レ\or ソ\or 
+    ツ\or ネ\or ナ\or ラ\or ム\or 
+    ウ\or ヰ\or ノ\or オ\or ク\or ヤ\or マ\or
+    ケ\or フ\or コ\or エ\or テ\or
+    ア\or サ\or キ\or ユ\or メ\or ミ\or シ\or 
+    ヱ\or ヒ\or モ\or セ\or ス\or ン\fi}
+  \AddEnumerateCounter{\kiroha}{\@kiroha}{イ}
+  
+  \def\emRoman#1{\expandafter\@emRoman\csname c@#1\endcsname}
+  \def\@emRoman#1{\protect\ajRoman{#1}}
+  \AddEnumerateCounter{\emRoman}{\@emRoman}{\ajRoman{8}}
+  
+  \def\emroman#1{\expandafter\@emroman\csname c@#1\endcsname}
+  \def\@emroman#1{\protect\ajroman{#1}}
+  \AddEnumerateCounter{\emroman}{\@emroman}{\ajroman{8}}
+  
+  \def\emarabic#1{\expandafter\@emarabic\csname c@#1\endcsname}
+  \def\@emarabic#1{\expandafter\@@emarabic\number#1@}
+  \def\@@emarabic#1{%
+    \if#1@\else
+      \ifcase#1０\or １\or ２\or ３\or ４\or ５\or ６\or ７\or ８\or ９\fi
+      \expandafter\@@emarabic
+    \fi}
+  \AddEnumerateCounter{\emarabic}{\@emarabic}{１}
+\fi
