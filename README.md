@@ -1,8 +1,15 @@
-# LaTeX_Reportレポジトリ
-LaTeXで作成したレポートや自作パッケージ類を置く（予定）
+# LaTeX_Packages レポジトリ
+LaTeXの自作パッケージ類
 
-## 自作パッケージ
-### exenumitem-jp.sty
+## skmetro.sty
++ metropolisをベースにしたBeamer用パッケージ
++ 日本語への対応も含む
++ LuaLaTeXでの使用を強く推奨
++ pLaTeX・upLaTeXでも使用可能
++ pLaTeX使用時は`platex`を，upLaTeX使用時には`uplatex`をオプションに指定すること：`\usepackage[uplatex]{skmetro}`などとすればよい
++ 詳細はPackage Documentationを参照のこと
+
+## exenumitem-jp.sty
 + `enumitem`パッケージをベースにしたリスト系環境の拡張パッケージ
 + `enumerate`環境における箇条の番号の書式の拡張がメイン
 + ①，②，③，…／あ，い，う，…／ア，イ，ウ，…／い，ろ，は，…／イ，ロ，ハ，…などが利用可能
