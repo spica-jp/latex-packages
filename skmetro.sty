@@ -1,0 +1,285 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{skmetro}[2022/11/06 SKu]
+\RequirePackage{xparse}
+\RequirePackage{graphicx,xcolor}
+
+\newif\if@platex
+\newif\if@uplatex
+\newif\if@lualatex
+\newif\if@beamerclass
+
+\newif\if@notload@theme@mode
+\newif\if@notload@siunitx@mode
+\newif\if@withinsec@mode
+
+\newif\if@normalcaption@mode
+\newif\if@engcaption@mode
+\newif\if@defaultfont@mode
+
+\DeclareOption{platex}{\@platextrue\@uplatexfalse\@lualatexfalse}
+\DeclareOption{uplatex}{\@platexfalse\@uplatextrue\@lualatexfalse}
+\DeclareOption{lualatex}{\@platexfalse\@uplatexfalse\@lualatextrue}
+\DeclareOption{notloadtheme}{\@notload@theme@modetrue}
+\DeclareOption{notloadsiunitx}{\@notload@siunitx@modetrue}
+\DeclareOption{minimalpackage}{\@minimalpackage@modetrue}
+\DeclareOption{engcaption}{\@engcaption@modetrue}
+\DeclareOption{normalcaption}{\@normalcaption@modetrue}
+\DeclareOption{defaultfont}{\@defaultfont@modetrue}
+\DeclareOption{withinsec}{\@withinsec@modetrue}
+\ExecuteOptions{lualatex}
+\ProcessOptions\relax
+
+\@ifclassloaded{beamer}{\@beamerclasstrue}{}
+\if@beamerclass
+  \if@notload@theme@mode
+    \relax
+  \else
+    \usetheme[numbering=fraction,progressbar=foot,block=fill]{metropolis}
+  \fi
+\fi
+
+\if@lualatex
+  \usepackage{luatexja}
+  \usepackage{luatexja-otf}
+  \if@defaultfont@mode
+    \usepackage{amsmath,amssymb,amsthm}
+    \usepackage{mathtools}
+    \usepackage{bm}
+    \usepackage[b]{esvect}
+    \if@withinsec@mode
+      \numberwithin{equation}{section}
+    \fi
+  \else
+    \if@beamerclass
+      \usepackage[math]{iwona}
+    \fi
+    \usepackage{amsmath,amssymb,amsthm}
+    \usepackage{mathtools}
+    \usepackage{bm}
+    \usepackage[b]{esvect}
+    \if@withinsec@mode
+      \numberwithin{equation}{section}
+    \fi
+    \usepackage[match,no-math]{luatexja-fontspec}
+    \usepackage[deluxe]{luatexja-preset}
+    \setmainfont{LatinModernRoman}[
+      OpticalSize=0,
+      SmallCapsFont=LMRomanCaps10-Regular,
+      FontFace={sb}{n}{LMRomanDemi10-Regular},
+    ]
+    \setsansfont{OpenSans}[
+      Scale=0.96,
+      FontFace={l}{n}{OpenSans-Light},
+      FontFace={l}{it}{OpenSans-LightItalic},
+      FontFace={sb}{n}{OpenSans-SemiBold},
+      FontFace={sb}{it}{OpenSans-SemiBoldItalic},
+      FontFace={eb}{n}{OpenSans-ExtraBold},
+      FontFace={eb}{it}{OpenSans-ExtraBoldItalic}
+    ]
+    \setmonofont{Inconsolatazi4}
+    \setmainjfont{HaranoAjiMincho}[
+      FontFace={l}{n}{HaranoAjiMincho-Light},
+      FontFace={sb}{n}{HaranoAjiMincho-Medium},
+      FontFace={eb}{n}{HaranoAjiMincho-Heavy}
+    ]
+    \setsansjfont{HaranoAjiGothic}[
+      FontFace={l}{n}{HaranoAjiGothic-Light},
+      FontFace={sb}{n}{HaranoAjiGothic-Medium}
+    ]
+    \DeclareRobustCommand\sbseries{\fontseries{sb}\selectfont}
+    \DeclareTextFontCommand{\textsb}{\sbseries}
+  \fi
+\else
+  \if@platex
+    \usepackage[expert,deluxe]{otf}
+    \usepackage[T1]{fontenc}
+    \usepackage[math]{iwona}
+    \usepackage{amsmath,amssymb,amsthm}
+    \usepackage{mathtools}
+    \usepackage{bm}
+    \usepackage[b]{esvect}
+    \if@withinsec@mode
+      \numberwithin{equation}{section}
+    \fi
+  \else
+    \if@uplatex
+      \usepackage[expert,deluxe,uplatex]{otf}
+      \usepackage[T1]{fontenc}
+      \usepackage[math]{iwona}
+      \usepackage{amsmath,amssymb,amsthm}
+      \usepackage{mathtools}
+      \usepackage{bm}
+      \usepackage[b]{esvect}
+      \if@withinsec@mode
+        \numberwithin{equation}{section}
+      \fi
+    \fi
+  \fi
+\fi
+
+\DeclareDocumentCommand\setmaincolor{O{RGB} m}{%
+  \definecolor{skmpmaincolor}{#1}{#2}%
+}
+\DeclareDocumentCommand\setaccentcolor{O{RGB} m}{%
+  \definecolor{skmpaccentcolor}{#1}{#2}%
+}
+\setmaincolor{60,179,113}
+\setaccentcolor{255,69,0}
+
+\if@beamerclass
+  \renewcommand{\familydefault}{\sfdefault}
+  \renewcommand{\kanjifamilydefault}{\gtdefault}
+  \usecolortheme{rose}
+  \useinnertheme{circles}
+  \setbeamertemplate{headline}[default]
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{section in toc}[sections numbered]
+  %\setbeamercolor{structure}{fg=skmpmaincolor}
+  \setbeamercolor{title}{fg=skmpmaincolor}
+  \setbeamercolor{section title}{fg=skmpmaincolor}
+  \setbeamercolor{frametitle}{bg=skmpmaincolor}
+  %\setbeamercolor{section in toc}{fg=skmpmaincolor}
+  \setbeamercolor{footlinecolor}{fg=skmpmaincolor,bg= skmpmaincolor!10!white}
+  \setbeamercolor{progress bar}{fg=skmpmaincolor,bg=skmpmaincolor!50!white}
+  \setbeamercovered{transparent=20}
+  \setbeamercolor{button}{bg=skmpmaincolor!10!white,fg=skmpmaincolor}
+  \setbeamercolor{block title example}{fg=skmpmaincolor,bg=skmpmaincolor!25!white}
+  \setbeamercolor{block body example}{bg=skmpmaincolor!15!white}
+  \setbeamercolor{block title alerted}{fg=skmpaccentcolor,bg=skmpaccentcolor!25!white}
+  \setbeamercolor{block body alerted}{bg=skmpaccentcolor!15!white}
+  \setbeamercolor{alerted text}{fg=skmpaccentcolor}
+  \setlength{\metropolis@titleseparator@linewidth}{1pt}
+  \setlength{\metropolis@progressonsectionpage@linewidth}{1pt}
+  \setlength{\metropolis@progressinheadfoot@linewidth}{3pt}
+\fi
+
+\if@notload@siunitx@mode
+  \relax
+\else
+  \usepackage{siunitx}
+\fi
+
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\if@normalcaption@mode
+  \usepackage[%
+    format=hang,%
+    font=normalsize,%
+  ]{caption}
+\else
+  \usepackage[%
+    format=hang,%
+    labelsep=quad,%
+    font=normalsize,%
+    labelfont={normalsize,sf,bf}%
+  ]{caption}
+\fi
+\usepackage{subcaption}
+\if@withinsec@mode
+  \numberwithin{figure}{section}
+  \numberwithin{table}{section}
+\fi
+\if@engcaption@mode
+  \captionsetup[figure]{name=Figure}
+  \captionsetup[table]{name=Table}
+\else
+  \captionsetup[figure]{name=図}
+  \captionsetup[table]{name=表}
+\fi
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,intersections,calc,arrows.meta,math,through}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems,breakable,skins,xparse,hooks}
+
+\usepackage{listings,jvlisting}
+\if@engcaption@mode
+  \renewcommand{\lstlistingname}{Listing}
+\else
+  \renewcommand{\lstlistingname}{リスト}
+\fi
+\if@withinsec@mode
+  \AtBeginDocument{\renewcommand{\thelstlisting}{\arabic{section}.\arabic{lstlisting}}\@addtoreset{lstlisting}{section}}
+\fi
+\if@lualatex
+  \lstset{%
+    breaklines=true,%
+    basicstyle=\ttfamily\scriptsize,%
+    frame=tb,%
+    numbers=left,%
+    numberstyle=\tiny,%
+    columns=[l]{fullflexible},%
+    xleftmargin=2.5\zw,%
+    lineskip=-0.5ex%
+  }
+\else
+  \lstset{%
+    breaklines=true,%
+    basicstyle=\ttfamily\scriptsize,%
+    frame=tb,%
+    numbers=left,%
+    numberstyle=\tiny,%
+    columns=[l]{fullflexible},%
+    xleftmargin=2.5zw,%
+    lineskip=-0.5ex%
+  }
+\fi
+
+\ProvideDocumentCommand\ffrac{m m}{\mathord{#1}\mathord{/}\mathord{#2}}
+\DeclareDocumentCommand\skffrac{m m}{\mathord{#1}\mathord{/}\mathord{#2}}
+\ProvideDocumentCommand\dsdash{}{\scalebox{2}[1]{―}}
+\DeclareDocumentCommand\skdsdash{}{\scalebox{2}[1]{―}}
+\ProvideDocumentCommand\dash{+m}{\dsdash#1\dsdash}
+\DeclareDocumentCommand\skdash{+m}{\skdsdash#1\skdsdash}
+\ProvideDocumentCommand\jpntoday{}{\number\year 年\number\month 月\number\day 日}
+\DeclareDocumentCommand\skjpntoday{}{\number\year 年\number\month 月\number\day 日}
+\RenewDocumentCommand\emph{+m}{{\sffamily\gtfamily\bfseries#1}}
+
+%%%okumacroでの実装をもとにしたコマンド%%%
+\providecommand{\jpndow}[1][]{{\def\jpndow@ption{#1}\def\jpndowsh@rt{short}\def\jpndow@j{aj}\@tempcnta=\year \@tempcntb=\month
+\ifnum \@tempcntb<3
+\advance \@tempcnta by -1
+\advance \@tempcntb by 12
+\fi
+\multiply \@tempcntb by 13
+\advance \@tempcntb by 8
+\divide \@tempcntb by 5
+\advance \@tempcntb by \@tempcnta
+\divide \@tempcnta by 4
+\advance \@tempcntb by \@tempcnta
+\divide \@tempcnta by 25
+\advance \@tempcntb by -\@tempcnta
+\divide \@tempcnta by 4
+\advance \@tempcntb by \@tempcnta
+\advance \@tempcntb by \day
+\@tempcnta=\@tempcntb
+\divide \@tempcntb by 7
+\multiply \@tempcntb by 7
+\advance \@tempcnta by -\@tempcntb
+\ifx\jpndow@ption\jpndowsh@rt{\ifcase \@tempcnta 日\or 月\or 火\or 水\or 木\or 金\or 土\fi}\else{\ifx\jpndow@ption\jpndow@j{\ifcase \@tempcnta \ajKakkoYobi{1}\or \ajKakkoYobi{2}\or \ajKakkoYobi{3}\or \ajKakkoYobi{4}\or \ajKakkoYobi{5}\or \ajKakkoYobi{6}\or \ajKakkoYobi{7}\fi}\else{\ifcase \@tempcnta 日曜日\or 月曜日\or 火曜日\or 水曜日\or 木曜日\or 金曜日\or 土曜日\fi}\fi}\fi}}
+
+\providecommand{\engdow}[1][]{{\def\engdow@ption{#1}\def\engdowsh@rt{short}\def\engdowiniti@l{initial}\@tempcnta=\year \@tempcntb=\month
+\ifnum \@tempcntb<3
+\advance \@tempcnta by -1
+\advance \@tempcntb by 12
+\fi
+\multiply \@tempcntb by 13
+\advance \@tempcntb by 8
+\divide \@tempcntb by 5
+\advance \@tempcntb by \@tempcnta
+\divide \@tempcnta by 4
+\advance \@tempcntb by \@tempcnta
+\divide \@tempcnta by 25
+\advance \@tempcntb by -\@tempcnta
+\divide \@tempcnta by 4
+\advance \@tempcntb by \@tempcnta
+\advance \@tempcntb by \day
+\@tempcnta=\@tempcntb
+\divide \@tempcntb by 7
+\multiply \@tempcntb by 7
+\advance \@tempcnta by -\@tempcntb
+\ifx\engdow@ption\engdowsh@rt{\ifcase \@tempcnta Sun\or Mon\or Tue\or Wed\or Thu\or Fri\or Sat\fi}\else{\ifx\engdow@ption\engdowiniti@l{\ifcase \@tempcnta S\or M\or T\or W\or T\or F\or S\fi}\else{\ifcase \@tempcnta Sunday\or Monday\or Tuesday\or Wednesday\or Thursday\or Friday\or Saturday\fi}\fi}\fi}}
