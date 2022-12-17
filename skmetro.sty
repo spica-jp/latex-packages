@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skmetro}[2022/11/06 SKu]
+\ProvidesPackage{skmetropolis-jp}[2022/12/17 SKu]
 \RequirePackage{xparse}
 \RequirePackage{graphicx,xcolor}
 
@@ -196,7 +196,11 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{theorems,breakable,skins,xparse,hooks}
 
-\usepackage{listings,jvlisting}
+\if@lualatex
+  \usepackage{listings}
+\else
+  \usepackage{listings,jvlisting}
+\fi
 \if@engcaption@mode
   \renewcommand{\lstlistingname}{Listing}
 \else
@@ -213,8 +217,9 @@
     numbers=left,%
     numberstyle=\tiny,%
     columns=[l]{fullflexible},%
-    xleftmargin=2.5\zw,%
-    lineskip=-0.5ex%
+    xleftmargin=2.75\zw,%
+    lineskip=-0.5ex,%
+    keepspaces=true%
   }
 \else
   \lstset{%
@@ -224,8 +229,9 @@
     numbers=left,%
     numberstyle=\tiny,%
     columns=[l]{fullflexible},%
-    xleftmargin=2.5zw,%
-    lineskip=-0.5ex%
+    xleftmargin=2.75zw,%
+    lineskip=-0.5ex,%
+    keepspaces=true%
   }
 \fi
 
