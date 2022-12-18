@@ -1,4 +1,4 @@
-# LaTeX_Packages
+# latex-packages
 LaTeXの自作パッケージ類
 
 ## skmetro.sty
