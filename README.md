@@ -9,7 +9,7 @@ LaTeXの自作パッケージ類
 + pLaTeX使用時は`platex`を，upLaTeX使用時には`uplatex`をオプションに指定すること：`\usepackage[uplatex]{skmetro}`などとすればよい
 + 詳細はPackage Documentationを参照のこと
 
-## exenumitem-jp.sty
+## skxenumitem.sty
 + `enumitem`パッケージをベースにしたリスト系環境の拡張パッケージ
 + `enumerate`環境における箇条の番号の書式の拡張がメイン
 + ①，②，③，…／あ，い，う，…／ア，イ，ウ，…／い，ろ，は，…／イ，ロ，ハ，…などが利用可能
