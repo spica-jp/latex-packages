@@ -16,7 +16,7 @@ LaTeXの自作パッケージ類
 + LuaLaTeXでの使用が推奨
 + pLaTeX・upLaTeXでも利用できるように暫定的には対処済み
 + jclasses，jsclasses，ltjsclasses，jlreqでの動作は確認済み
-+ パッケージのオプションとして`loadonly`，`platex`，`uplatex`を用意：`\usepackage[loadonly]{exenumitem-jp}`などとすればよい
-+ `loadonly`未指定時は，番号の付き方などを`exenumitem-jp`側で設定
++ パッケージのオプションとして`loadonly`，`platex`，`uplatex`を用意：`\usepackage[loadonly]{skxenumitem}`などとすればよい
++ `loadonly`未指定時は，番号の付き方などを`skxenumitem`側で設定
 + `loadonly`指定時は，番号の付き方などの設定は変更しない
-+ pLaTeX使用時は`platex`を，upLaTeX使用時には`uplatex`をオプションに指定すること：`\usepackage[uplatex]{exenumitem-jp}`などとすればよい
++ pLaTeX使用時は`platex`を，upLaTeX使用時には`uplatex`をオプションに指定すること：`\usepackage[uplatex]{skxenumitem}`などとすればよい
