@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skxenumitem}[2022/10/16 SKu]
+\ProvidesPackage{skenumitem}[2023/01/01 SKu]
 \RequirePackage{enumitem}
 
 \newif\if@loadonlymode
@@ -43,8 +43,8 @@
     \setlist{align=left,leftmargin=*}
     \setlist[enumerate]{label=\carabic*}
     \setlist[description]{style=nextline}
-      \setlist[enumerate,1]{label=\carabic*,labelindent=\parindent}
-      \setlist[itemize,1]{labelindent=\parindent}
+    \setlist[enumerate,1]{label=\carabic*,labelindent=\parindent}
+    \setlist[itemize,1]{labelindent=\parindent}
   \fi
   \def\carabic#1{\expandafter\@carabic\csname c@#1\endcsname}
   \def\@carabic#1{\protect\ajMaru{#1}}
