@@ -150,9 +150,13 @@
   \setbeamercolor{block title alerted}{fg=skmpaccentcolor,bg=skmpaccentcolor!25!white}
   \setbeamercolor{block body alerted}{bg=skmpaccentcolor!15!white}
   \setbeamercolor{alerted text}{fg=skmpaccentcolor}
-  \setlength{\metropolis@titleseparator@linewidth}{1pt}
-  \setlength{\metropolis@progressonsectionpage@linewidth}{1pt}
-  \setlength{\metropolis@progressinheadfoot@linewidth}{3pt}
+  \if@notload@theme@mode
+    \relax
+  \else
+    \setlength{\metropolis@titleseparator@linewidth}{1pt}
+    \setlength{\metropolis@progressonsectionpage@linewidth}{1pt}
+    \setlength{\metropolis@progressinheadfoot@linewidth}{3pt}
+  \fi
 \fi
 
 \if@notload@siunitx@mode
