@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skenumitem}[2023/01/01 SKu]
+\ProvidesPackage{skenumitem}[2023/01/26 SKu]
 \RequirePackage{enumitem}
 
 \newif\if@loadonlymode
@@ -28,8 +28,6 @@
   \else
     \if@uplatex
       \RequirePackage[expert,deluxe,uplatex]{otf}
-    \else
-      \relax
     \fi
   \fi
 \fi
@@ -110,14 +108,12 @@
   \def\@emroman#1{\protect\ajroman{#1}}
   \AddEnumerateCounter{\emroman}{\@emroman}{\ajroman{8}}
   
-  \if@lualatex
-    \def\emarabic#1{\expandafter\@emarabic\csname c@#1\endcsname}
-    \def\@emarabic#1{\expandafter\@@emarabic\number#1@}
-    \def\@@emarabic#1{%
-      \if#1@\else
-        \ifcase#1０\or １\or ２\or ３\or ４\or ５\or ６\or ７\or ８\or ９\fi
-        \expandafter\@@emarabic
-      \fi}
-    \AddEnumerateCounter{\emarabic}{\@emarabic}{１}
-  \fi
+  \def\emarabic#1{\expandafter\@emarabic\csname c@#1\endcsname}
+  \def\@emarabic#1{\expandafter\@@emarabic\number#1@}
+  \def\@@emarabic#1{%
+    \if#1@\else
+      \ifcase#1０\or １\or ２\or ３\or ４\or ５\or ６\or ７\or ８\or ９\fi
+      \expandafter\@@emarabic
+    \fi}
+  \AddEnumerateCounter{\emarabic}{\@emarabic}{１}
 \fi
