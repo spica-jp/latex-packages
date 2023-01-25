@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skmetro}[2023/01/23 SKu]
+\ProvidesPackage{skmetro}[2023/01/26 SKu]
 \RequirePackage{graphicx,xcolor}
 
 \newif\if@platex
@@ -33,7 +33,18 @@
   \if@notload@theme@mode
     \relax
   \else
-    \usetheme[numbering=fraction,progressbar=foot,block=fill]{metropolis}
+    \usetheme{metropolis}
+    \metroset{numbering=fraction,progressbar=foot,block=fill}
+  \fi
+\fi
+
+\if@platex
+  \providecommand*{\zw}{zw}
+  \providecommand*{\zh}{zh}
+\else
+  \if@uplatex
+    \providecommand*{\zw}{zw}
+    \providecommand*{\zh}{zh}
   \fi
 \fi
 
@@ -44,7 +55,6 @@
     \RequirePackage{amsmath,amssymb,amsthm}
     \RequirePackage{mathtools}
     \RequirePackage{bm}
-    \RequirePackage[b]{esvect}
     \if@withinsec@mode
       \numberwithin{equation}{section}
     \fi
@@ -55,35 +65,34 @@
     \RequirePackage{amsmath,amssymb,amsthm}
     \RequirePackage{mathtools}
     \RequirePackage{bm}
-    \RequirePackage[b]{esvect}
     \if@withinsec@mode
       \numberwithin{equation}{section}
     \fi
     \RequirePackage[match,no-math]{luatexja-fontspec}
     \RequirePackage[deluxe]{luatexja-preset}
-    \setmainfont{LatinModernRoman}[
-      OpticalSize=0,
-      SmallCapsFont=LMRomanCaps10-Regular,
-      FontFace={sb}{n}{LMRomanDemi10-Regular},
+    \setmainfont{LatinModernRoman}[%
+      OpticalSize=0,%
+      SmallCapsFont=LMRomanCaps10-Regular,%
+      FontFace={sb}{n}{LMRomanDemi10-Regular},%
     ]
-    \setsansfont{OpenSans}[
-      Scale=0.96,
-      FontFace={l}{n}{OpenSans-Light},
-      FontFace={l}{it}{OpenSans-LightItalic},
-      FontFace={sb}{n}{OpenSans-SemiBold},
-      FontFace={sb}{it}{OpenSans-SemiBoldItalic},
-      FontFace={eb}{n}{OpenSans-ExtraBold},
-      FontFace={eb}{it}{OpenSans-ExtraBoldItalic}
+    \setsansfont{OpenSans}[%
+      Scale=0.96,%
+      FontFace={l}{n}{OpenSans-Light},%
+      FontFace={l}{it}{OpenSans-LightItalic},%
+      FontFace={sb}{n}{OpenSans-SemiBold},%
+      FontFace={sb}{it}{OpenSans-SemiBoldItalic},%
+      FontFace={eb}{n}{OpenSans-ExtraBold},%
+      FontFace={eb}{it}{OpenSans-ExtraBoldItalic}%
     ]
     \setmonofont{Inconsolatazi4}
-    \setmainjfont{HaranoAjiMincho}[
-      FontFace={l}{n}{HaranoAjiMincho-Light},
-      FontFace={sb}{n}{HaranoAjiMincho-Medium},
-      FontFace={eb}{n}{HaranoAjiMincho-Heavy}
+    \setmainjfont{HaranoAjiMincho}[%
+      FontFace={l}{n}{HaranoAjiMincho-Light},%
+      FontFace={sb}{n}{HaranoAjiMincho-Medium},%
+      FontFace={eb}{n}{HaranoAjiMincho-Heavy}%
     ]
-    \setsansjfont{HaranoAjiGothic}[
-      FontFace={l}{n}{HaranoAjiGothic-Light},
-      FontFace={sb}{n}{HaranoAjiGothic-Medium}
+    \setsansjfont{HaranoAjiGothic}[%
+      FontFace={l}{n}{HaranoAjiGothic-Light},%
+      FontFace={sb}{n}{HaranoAjiGothic-Medium}%
     ]
     \DeclareRobustCommand\sbseries{\fontseries{sb}\selectfont}
     \DeclareTextFontCommand{\textsb}{\sbseries}
@@ -96,7 +105,6 @@
     \RequirePackage{amsmath,amssymb,amsthm}
     \RequirePackage{mathtools}
     \RequirePackage{bm}
-    \RequirePackage[b]{esvect}
     \if@withinsec@mode
       \numberwithin{equation}{section}
     \fi
@@ -108,7 +116,6 @@
       \RequirePackage{amsmath,amssymb,amsthm}
       \RequirePackage{mathtools}
       \RequirePackage{bm}
-      \RequirePackage[b]{esvect}
       \if@withinsec@mode
         \numberwithin{equation}{section}
       \fi
@@ -133,6 +140,7 @@
   \setbeamertemplate{headline}[default]
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{section in toc}[sections numbered]
+  %\setbeamertemplate{subsection in toc}[subsections numbered]
   %\setbeamercolor{structure}{fg=skmpmaincolor}
   \setbeamercolor{title}{fg=skmpmaincolor}
   \setbeamercolor{section title}{fg=skmpmaincolor}
@@ -198,7 +206,7 @@
 \RequirePackage{tikz}
 \usetikzlibrary{positioning,intersections,calc,arrows.meta,math,through}
 \RequirePackage{tcolorbox}
-\tcbuselibrary{theorems,breakable,skins,xparse,hooks}
+\tcbuselibrary{theorems,breakable,skins,xparse,hooks,listings}
 
 \if@lualatex
   \RequirePackage{listings}
@@ -247,7 +255,7 @@
 \DeclareDocumentCommand\skdash{+m}{\skdsdash#1\skdsdash}
 \ProvideDocumentCommand\jpntoday{}{\number\year 年\number\month 月\number\day 日}
 \DeclareDocumentCommand\skjpntoday{}{\number\year 年\number\month 月\number\day 日}
-\RenewDocumentCommand\emph{+m}{{\sffamily\gtfamily\bfseries#1}}
+\RenewDocumentCommand\emph{+m}{{\sffamily\gtfamily\bfseries #1}}
 
 %%%okumacroでの実装をもとにしたコマンド%%%
 \providecommand{\jpndow}[1][]{{\def\jpndow@ption{#1}\def\jpndowsh@rt{short}\def\jpndow@j{aj}\@tempcnta=\year \@tempcntb=\month
