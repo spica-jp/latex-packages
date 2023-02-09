@@ -1,6 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skmetro}[2023/01/26 SKu]
+\ProvidesPackage{skmetro}[2023/02/10 SKu]
 \RequirePackage{graphicx,xcolor}
+\RequirePackage{iftex}
 
 \newif\if@platex
 \newif\if@uplatex
@@ -20,7 +21,6 @@
 \DeclareOption{lualatex}{\@platexfalse\@uplatexfalse\@lualatextrue}
 \DeclareOption{notloadtheme}{\@notload@theme@modetrue}
 \DeclareOption{notloadsiunitx}{\@notload@siunitx@modetrue}
-% \DeclareOption{minimalpackage}{\@minimalpackage@modetrue}
 \DeclareOption{engcaption}{\@engcaption@modetrue}
 \DeclareOption{normalcaption}{\@normalcaption@modetrue}
 \DeclareOption{defaultfont}{\@defaultfont@modetrue}
@@ -28,23 +28,34 @@
 \ExecuteOptions{lualatex}
 \ProcessOptions\relax
 
+\ifluatex
+  \@platexfalse\@uplatexfalse\@lualatextrue
+\fi
+
+\ifuptex
+  \@platexfalse\@uplatextrue\@lualatexfalse
+\else
+  \ifptex
+    \@platextrue\@uplatexfalse\@lualatexfalse
+  \fi
+\fi
+
 \@ifclassloaded{beamer}{\@beamerclasstrue}{}
+
 \if@beamerclass
-  \if@notload@theme@mode
-    \relax
-  \else
+  \if@notload@theme@mode\else
     \usetheme{metropolis}
     \metroset{numbering=fraction,progressbar=foot,block=fill}
   \fi
 \fi
 
 \if@platex
-  \providecommand*{\zw}{zw}
-  \providecommand*{\zh}{zh}
+  \ProvideDocumentCommand\zw{}{zw}
+  \ProvideDocumentCommand\zh{}{zh}
 \else
   \if@uplatex
-    \providecommand*{\zw}{zw}
-    \providecommand*{\zh}{zh}
+    \ProvideDocumentCommand\zw{}{zw}
+    \ProvideDocumentCommand\zh{}{zh}
   \fi
 \fi
 
@@ -55,9 +66,6 @@
     \RequirePackage{amsmath,amssymb,amsthm}
     \RequirePackage{mathtools}
     \RequirePackage{bm}
-    \if@withinsec@mode
-      \numberwithin{equation}{section}
-    \fi
   \else
     \if@beamerclass
       \RequirePackage[math]{iwona}
@@ -65,9 +73,6 @@
     \RequirePackage{amsmath,amssymb,amsthm}
     \RequirePackage{mathtools}
     \RequirePackage{bm}
-    \if@withinsec@mode
-      \numberwithin{equation}{section}
-    \fi
     \RequirePackage[match,no-math]{luatexja-fontspec}
     \RequirePackage[deluxe]{luatexja-preset}
     \setmainfont{LatinModernRoman}[%
@@ -105,9 +110,6 @@
     \RequirePackage{amsmath,amssymb,amsthm}
     \RequirePackage{mathtools}
     \RequirePackage{bm}
-    \if@withinsec@mode
-      \numberwithin{equation}{section}
-    \fi
   \else
     \if@uplatex
       \RequirePackage[expert,deluxe,uplatex]{otf}
@@ -116,18 +118,19 @@
       \RequirePackage{amsmath,amssymb,amsthm}
       \RequirePackage{mathtools}
       \RequirePackage{bm}
-      \if@withinsec@mode
-        \numberwithin{equation}{section}
-      \fi
     \fi
   \fi
 \fi
 
-\DeclareDocumentCommand\setmaincolor{O{RGB} m}{%
-  \definecolor{skmpmaincolor}{#1}{#2}%
+\if@withinsec@mode
+  \numberwithin{equation}{section}
+\fi
+
+\DeclareDocumentCommand\setmaincolor{s O{RGB} m}{%
+  \IfBooleanTF{#1}{\colorlet{skmpmaincolor}{#3}}{\definecolor{skmpmaincolor}{#2}{#3}}%
 }
-\DeclareDocumentCommand\setaccentcolor{O{RGB} m}{%
-  \definecolor{skmpaccentcolor}{#1}{#2}%
+\DeclareDocumentCommand\setaccentcolor{s O{RGB} m}{%
+  \IfBooleanTF{#1}{\colorlet{skmpaccentcolor}{#3}}{\definecolor{skmpaccentcolor}{#2}{#3}}%
 }
 \setmaincolor{60,179,113}
 \setaccentcolor{255,69,0}
@@ -140,12 +143,12 @@
   \setbeamertemplate{headline}[default]
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{section in toc}[sections numbered]
-  %\setbeamertemplate{subsection in toc}[subsections numbered]
-  %\setbeamercolor{structure}{fg=skmpmaincolor}
+  % \setbeamertemplate{subsection in toc}[subsections numbered]
+  % \setbeamercolor{structure}{fg=skmpmaincolor}
   \setbeamercolor{title}{fg=skmpmaincolor}
   \setbeamercolor{section title}{fg=skmpmaincolor}
   \setbeamercolor{frametitle}{bg=skmpmaincolor}
-  %\setbeamercolor{section in toc}{fg=skmpmaincolor}
+  % \setbeamercolor{section in toc}{fg=skmpmaincolor}
   \setbeamercolor{footlinecolor}{fg=skmpmaincolor,bg= skmpmaincolor!10!white}
   \setbeamercolor{progress bar}{fg=skmpmaincolor,bg=skmpmaincolor!50!white}
   \setbeamercovered{transparent=20}
@@ -155,18 +158,14 @@
   \setbeamercolor{block title alerted}{fg=skmpaccentcolor,bg=skmpaccentcolor!25!white}
   \setbeamercolor{block body alerted}{bg=skmpaccentcolor!15!white}
   \setbeamercolor{alerted text}{fg=skmpaccentcolor}
-  \if@notload@theme@mode
-    \relax
-  \else
+  \if@notload@theme@mode\else
     \setlength{\metropolis@titleseparator@linewidth}{1pt}
     \setlength{\metropolis@progressonsectionpage@linewidth}{1pt}
     \setlength{\metropolis@progressinheadfoot@linewidth}{3pt}
   \fi
 \fi
 
-\if@notload@siunitx@mode
-  \relax
-\else
+\if@notload@siunitx@mode\else
   \RequirePackage{siunitx}
 \fi
 
@@ -221,31 +220,18 @@
 \if@withinsec@mode
   \AtBeginDocument{\renewcommand{\thelstlisting}{\arabic{section}.\arabic{lstlisting}}\@addtoreset{lstlisting}{section}}
 \fi
-\if@lualatex
-  \lstset{%
-    breaklines=true,%
-    basicstyle=\ttfamily\scriptsize,%
-    frame=tb,%
-    numbers=left,%
-    numberstyle=\tiny,%
-    columns=[l]{fullflexible},%
-    xleftmargin=2.75\zw,%
-    lineskip=-0.5ex,%
-    keepspaces=true%
-  }
-\else
-  \lstset{%
-    breaklines=true,%
-    basicstyle=\ttfamily\scriptsize,%
-    frame=tb,%
-    numbers=left,%
-    numberstyle=\tiny,%
-    columns=[l]{fullflexible},%
-    xleftmargin=2.75zw,%
-    lineskip=-0.5ex,%
-    keepspaces=true%
-  }
-\fi
+\lstset{%
+  breaklines=true,%
+  basicstyle=\ttfamily\lst@ifdisplaystyle\scriptsize\fi,%
+  frame=tb,%
+  numbers=left,%
+  numberstyle=\tiny,%
+  columns=fixed,%
+  basewidth=0.5em,%
+  xleftmargin=2.75\zw,%
+  lineskip=-0.5ex,%
+  keepspaces=true%
+}
 
 \ProvideDocumentCommand\ffrac{m m}{\mathord{#1}\mathord{/}\mathord{#2}}
 \DeclareDocumentCommand\skffrac{m m}{\mathord{#1}\mathord{/}\mathord{#2}}
@@ -257,7 +243,7 @@
 \DeclareDocumentCommand\skjpntoday{}{\number\year 年\number\month 月\number\day 日}
 \RenewDocumentCommand\emph{+m}{{\sffamily\gtfamily\bfseries #1}}
 
-%%%okumacroでの実装をもとにしたコマンド%%%
+%%% okumacroでの実装をもとにしたコマンド %%%
 \providecommand{\jpndow}[1][]{{\def\jpndow@ption{#1}\def\jpndowsh@rt{short}\def\jpndow@j{aj}\@tempcnta=\year \@tempcntb=\month
 \ifnum \@tempcntb<3
 \advance \@tempcnta by -1
