@@ -6,18 +6,13 @@ LaTeXの自作パッケージ類
 
 metropolisをベースにしたBeamer用パッケージです。
 
-日本語化も含みます。
-
 ### 対応状況
 
 #### LaTeXエンジン
 
 日本で主に使用されるpLaTeX、upLaTeX、LuaLaTeXに対応しています。
 
-使用エンジンは自動判定されますが、pLaTeX使用時は`platex`を、upLaTeX使用時には`uplatex`をオプションに指定しても構いません。
-
-#### ドキュメントクラス
-Beamerに対応しています。
+使用エンジンは自動判定されますが、pLaTeX使用時は`platex`を、upLaTeX使用時には`uplatex`を、LuaLaTeX使用時には`lualatex`をオプションに指定しても構いません。
 
 ### さらに知るには
 
@@ -29,12 +24,13 @@ Beamerに対応しています。
 
 特に`enumerate`環境における箇条番号書式の拡張がメインとなっており、具体的には、
 
-+ ①，②，③，…
-+ あ，い，う，…
-+ ア，イ，ウ，…
-+ い，ろ，は，…
-+ イ，ロ，ハ，…
-+ 全角ギリシャ数字
++ ①、②、③、…
++ あ、いう、…
++ ア、イ、ウ、…
++ い、ろ、は、…
++ イ、ロ、ハ、…
++ 全角ローマ数字（Ⅰ、Ⅱ、Ⅲ、…／ⅰ、ⅱ、ⅲ、…）
++ 全角アラビア数字（１、２、３、…）
 
 などが利用可能となります。
 
@@ -44,10 +40,10 @@ Beamerに対応しています。
 
 日本で主に使用されるpLaTeX、upLaTeX、LuaLaTeXに対応しています。
 
-使用エンジンは自動判定されますが、pLaTeX使用時は`platex`を、upLaTeX使用時には`uplatex`をオプションに指定しても構いません。
+使用エンジンは自動判定されますが、pLaTeX使用時は`platex`を、upLaTeX使用時には`uplatex`を、LuaLaTeX使用時には`lualatex`をオプションに指定しても構いません。
 
 #### ドキュメントクラス
-jclasses，jsclasses，ltjsclasses，jlreqに対応しています。
+jclasses、jsclasses、ltjsclasses、jlreqに対応しています。
 
 ### `loadonly`オプション
 パッケージのオプションとして`loadonly`を用意しています。
