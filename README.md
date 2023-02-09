@@ -1,22 +1,55 @@
 # latex-packages
+
 LaTeXの自作パッケージ類
 
 ## skmetro.sty
-+ metropolisをベースにしたBeamer用パッケージ
-+ 日本語への対応も含む
-+ LuaLaTeXでの使用を強く推奨
-+ pLaTeX・upLaTeXでも使用可能
-+ pLaTeX使用時は`platex`を，upLaTeX使用時には`uplatex`をオプションに指定すること：`\usepackage[uplatex]{skmetro}`などとすればよい
-+ 詳細はPackage Documentationを参照のこと
+
+metropolisをベースにしたBeamer用パッケージです。
+
+日本語化も含みます。
+
+### 対応状況
+
+#### LaTeXエンジン
+
+日本で主に使用されるpLaTeX、upLaTeX、LuaLaTeXに対応しています。
+
+使用エンジンは自動判定されますが、pLaTeX使用時は`platex`を、upLaTeX使用時には`uplatex`をオプションに指定しても構いません。
+
+#### ドキュメントクラス
+Beamerに対応しています。
+
+### さらに知るには
+
+その他詳細はPackage Documentationを参照してください。
 
 ## skenumitem.sty
-+ `enumitem`パッケージをベースにしたリスト系環境の拡張パッケージ
-+ `enumerate`環境における箇条の番号の書式の拡張がメイン
-+ ①，②，③，…／あ，い，う，…／ア，イ，ウ，…／い，ろ，は，…／イ，ロ，ハ，…などが利用可能
-+ LuaLaTeXでの使用が推奨
-+ pLaTeX・upLaTeXでも利用できるように暫定的には対処済み
-+ jclasses，jsclasses，ltjsclasses，jlreqでの動作は確認済み
-+ パッケージのオプションとして`loadonly`，`platex`，`uplatex`を用意：`\usepackage[loadonly]{skenumitem}`などとすればよい
-+ `loadonly`未指定時は，番号の付き方などを`skenumitem`側で設定
-+ `loadonly`指定時は，番号の付き方などの設定は変更しない
-+ pLaTeX使用時は`platex`を，upLaTeX使用時には`uplatex`をオプションに指定すること：`\usepackage[uplatex]{skenumitem}`などとすればよい
+
+`enumitem`パッケージの拡張パッケージです。
+
+特に`enumerate`環境における箇条番号書式の拡張がメインとなっており、具体的には、
+
++ ①，②，③，…
++ あ，い，う，…
++ ア，イ，ウ，…
++ い，ろ，は，…
++ イ，ロ，ハ，…
++ 全角ギリシャ数字
+
+などが利用可能となります。
+
+### 対応状況
+
+#### LaTeXエンジン
+
+日本で主に使用されるpLaTeX、upLaTeX、LuaLaTeXに対応しています。
+
+使用エンジンは自動判定されますが、pLaTeX使用時は`platex`を、upLaTeX使用時には`uplatex`をオプションに指定しても構いません。
+
+#### ドキュメントクラス
+jclasses，jsclasses，ltjsclasses，jlreqに対応しています。
+
+### `loadonly`オプション
+パッケージのオプションとして`loadonly`を用意しています。
+
+`loadonly`未指定時は、番号の付き方などを`skenumitem`側で再設定しますが、`loadonly`指定時は、番号の付き方などの設定変更を行いません。
