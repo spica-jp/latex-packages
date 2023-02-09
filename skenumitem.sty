@@ -1,6 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skenumitem}[2023/01/26 SKu]
+\ProvidesPackage{skenumitem}[2023/02/10 SKu]
 \RequirePackage{enumitem}
+\RequirePackage{iftex}
 
 \newif\if@loadonlymode
 
@@ -16,6 +17,18 @@
 \DeclareOption{lualatex}{\@platexfalse\@uplatexfalse\@lualatextrue}
 \ExecuteOptions{lualatex}
 \ProcessOptions\relax
+
+\ifluatex
+  \@platexfalse\@uplatexfalse\@lualatextrue
+\fi
+
+\ifuptex
+  \@platexfalse\@uplatextrue\@lualatexfalse
+\else
+  \ifptex
+    \@platextrue\@uplatexfalse\@lualatexfalse
+  \fi
+\fi
 
 \@ifclassloaded{beamer}{\@beamerclasstrue}{}
 
