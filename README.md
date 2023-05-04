@@ -45,7 +45,7 @@ jclasses、jsclasses、ltjsclasses、jlreqに対応しています。
 ---
 
 ## リリースノート
-### `skemtro.sty`
+### `skmetro.sty`
 #### 2023/02/10
 エンジンの自動判定を行うようにしました。
 
