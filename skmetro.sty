@@ -1,128 +1,176 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skmetro}[2023/02/10 SKu]
+\ProvidesPackage{skmetro}[2023/07/10 SKu]
 \RequirePackage{graphicx,xcolor}
-\RequirePackage{iftex}
 
-\newif\if@platex
-\newif\if@uplatex
-\newif\if@lualatex
-\newif\if@beamerclass
+\newif\if@sk@platex
+\newif\if@sk@uplatex
+\newif\if@sk@lualatex
+\newif\if@sk@beamerclass
 
-\newif\if@notload@theme@mode
-\newif\if@notload@siunitx@mode
-\newif\if@withinsec@mode
+\newif\if@sk@notload@theme@mode
+\newif\if@sk@notload@siunitx@mode
+\newif\if@sk@withinsec@mode
 
-\newif\if@normalcaption@mode
-\newif\if@engcaption@mode
-\newif\if@defaultfont@mode
+\newif\if@sk@normalcaption@mode
+\newif\if@sk@engcaption@mode
 
-\DeclareOption{platex}{\@platextrue\@uplatexfalse\@lualatexfalse}
-\DeclareOption{uplatex}{\@platexfalse\@uplatextrue\@lualatexfalse}
-\DeclareOption{lualatex}{\@platexfalse\@uplatexfalse\@lualatextrue}
-\DeclareOption{notloadtheme}{\@notload@theme@modetrue}
-\DeclareOption{notloadsiunitx}{\@notload@siunitx@modetrue}
-\DeclareOption{engcaption}{\@engcaption@modetrue}
-\DeclareOption{normalcaption}{\@normalcaption@modetrue}
-\DeclareOption{defaultfont}{\@defaultfont@modetrue}
-\DeclareOption{withinsec}{\@withinsec@modetrue}
-\ExecuteOptions{lualatex}
+\newif\if@sk@unicodemath@mode
+\newif\if@sk@defaultfont@mode
+\newif\if@sk@opensans@mode
+\newif\if@sk@firasans@mode
+
+\NewDocumentCommand\skmpdetectedengine{}{undefined}
+\ifx\directlua\undefined
+  \ifx\kanjiskip\undefined\else
+    \RenewDocumentCommand\skmpdetectedengine{}{\LaTeX, pdf\LaTeX, and so on}
+    \ifnum\jis"2121="3000
+      \@sk@platexfalse\@sk@uplatextrue\@sk@lualatexfalse
+      \RenewDocumentCommand\skmpdetectedengine{}{up\LaTeX}
+    \else
+      \@sk@platextrue\@sk@uplatexfalse\@sk@lualatexfalse
+      \RenewDocumentCommand\skmpdetectedengine{}{p\LaTeX}
+    \fi
+  \fi
+\else
+  \@sk@platexfalse\@sk@uplatexfalse\@sk@lualatextrue
+  \RenewDocumentCommand\skmpdetectedengine{}{Lua\LaTeX}
+\fi
+
+\DeclareOption{platex}{\@sk@platextrue\@sk@uplatexfalse\@sk@lualatexfalse}
+\DeclareOption{uplatex}{\@sk@platexfalse\@sk@uplatextrue\@sk@lualatexfalse}
+\DeclareOption{lualatex}{\@sk@platexfalse\@sk@uplatexfalse\@sk@lualatextrue}
+
+\DeclareOption{notloadtheme}{\@sk@notload@theme@modetrue}
+\DeclareOption{notloadsiunitx}{\@sk@notload@siunitx@modetrue}
+
+\DeclareOption{engcaption}{\@sk@engcaption@modetrue}
+\DeclareOption{normalcaption}{\@sk@normalcaption@modetrue}
+
+\DeclareOption{defaultfont}{\@sk@defaultfont@modetrue}
+\DeclareOption{opensans}{\@sk@defaultfont@modefalse\@sk@firasans@modefalse\@sk@opensans@modetrue\@sk@unicodemath@modefalse}
+\DeclareOption{firasans}{\@sk@defaultfont@modefalse\@sk@firasans@modetrue\@sk@opensans@modefalse\@sk@unicodemath@modetrue}
+
+\DeclareOption{withinsec}{\@sk@withinsec@modetrue}
+
+\ExecuteOptions{firasans}
 \ProcessOptions\relax
 
-\ifluatex
-  \@platexfalse\@uplatexfalse\@lualatextrue
-\fi
+\@ifclassloaded{beamer}{\@sk@beamerclasstrue}{}
 
-\ifuptex
-  \@platexfalse\@uplatextrue\@lualatexfalse
-\else
-  \ifptex
-    \@platextrue\@uplatexfalse\@lualatexfalse
-  \fi
-\fi
-
-\@ifclassloaded{beamer}{\@beamerclasstrue}{}
-
-\if@beamerclass
-  \if@notload@theme@mode\else
+\if@sk@beamerclass
+  \if@sk@notload@theme@mode\else
     \usetheme{metropolis}
     \metroset{numbering=fraction,progressbar=foot,block=fill}
   \fi
 \fi
 
-\if@platex
-  \ProvideDocumentCommand\zw{}{zw}
-  \ProvideDocumentCommand\zh{}{zh}
+\if@sk@lualatex
+  \RequirePackage{luatexja}
+  \RequirePackage{luatexja-otf}
 \else
-  \if@uplatex
+  \if@sk@uplatex
+    \RequirePackage[expert,deluxe,uplate]{otf}
     \ProvideDocumentCommand\zw{}{zw}
     \ProvideDocumentCommand\zh{}{zh}
+  \else
+    \if@sk@platex
+      \RequirePackage[expert,deluxe]{otf}
+      \ProvideDocumentCommand\zw{}{zw}
+      \ProvideDocumentCommand\zh{}{zh}
+    \fi
   \fi
 \fi
 
-\if@lualatex
-  \RequirePackage{luatexja}
-  \RequirePackage{luatexja-otf}
-  \if@defaultfont@mode
-    \RequirePackage{amsmath,amssymb,amsthm}
-    \RequirePackage{mathtools}
-    \RequirePackage{bm}
-  \else
-    \if@beamerclass
-      \RequirePackage[math]{iwona}
-    \fi
-    \RequirePackage{amsmath,amssymb,amsthm}
-    \RequirePackage{mathtools}
-    \RequirePackage{bm}
+\if@sk@unicodemath@mode\else
+  \RequirePackage[math]{iwona}
+\fi
+
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{mathtools}
+
+\if@sk@unicodemath@mode
+  \RequirePackage{unicode-math}
+  \NewDocumentCommand\bm{m}{\symbfit{#1}}
+\else
+  \RequirePackage{bm}
+\fi
+
+\if@sk@defaultfont@mode\else
+  \if@sk@lualatex
     \RequirePackage[match,no-math]{luatexja-fontspec}
     \RequirePackage[deluxe]{luatexja-preset}
-    \setmainfont{LatinModernRoman}[%
-      OpticalSize=0,%
-      SmallCapsFont=LMRomanCaps10-Regular,%
-      FontFace={sb}{n}{LMRomanDemi10-Regular},%
-    ]
-    \setsansfont{OpenSans}[%
-      Scale=0.96,%
-      FontFace={l}{n}{OpenSans-Light},%
-      FontFace={l}{it}{OpenSans-LightItalic},%
-      FontFace={sb}{n}{OpenSans-SemiBold},%
-      FontFace={sb}{it}{OpenSans-SemiBoldItalic},%
-      FontFace={eb}{n}{OpenSans-ExtraBold},%
-      FontFace={eb}{it}{OpenSans-ExtraBoldItalic}%
-    ]
-    \setmonofont{Inconsolatazi4}
-    \setmainjfont{HaranoAjiMincho}[%
-      FontFace={l}{n}{HaranoAjiMincho-Light},%
-      FontFace={sb}{n}{HaranoAjiMincho-Medium},%
-      FontFace={eb}{n}{HaranoAjiMincho-Heavy}%
+    \if@sk@firasans@mode
+      \setmainfont{FiraSans}[%
+        Scale=1.05,%
+        FontFace={l}{n}{FiraSans-Light},%
+        FontFace={l}{it}{FiraSans-LightItalic},%
+        FontFace={sb}{n}{FiraSans-Medium},%
+        FontFace={sb}{it}{FiraSans-MediumItalic},%
+        FontFace={eb}{n}{FiraSans-ExtraBold},%
+        FontFace={eb}{it}{FiraSans-ExtraBoldItalic}%
+      ]
+      \setsansfont{FiraSans}[%
+        Scale=1.05,%
+        FontFace={l}{n}{FiraSans-Light},%
+        FontFace={l}{it}{FiraSans-LightItalic},%
+        FontFace={sb}{n}{FiraSans-Medium},%
+        FontFace={sb}{it}{FiraSans-MediumItalic},%
+        FontFace={eb}{n}{FiraSans-ExtraBold},%
+        FontFace={eb}{it}{FiraSans-ExtraBoldItalic}%
+      ]
+      \setmathfont{FiraMath}
+      \setmathfont{FiraMath}[%
+        version=bold,%
+        FakeBold=5%
+      ]
+      \setmonofont{FiraMono}
+    \else
+      \if@sk@opensans@mode
+        \setmainfont{OpenSans}[%
+          Scale=0.96,%
+          FontFace={l}{n}{OpenSans-Light},%
+          FontFace={l}{it}{OpenSans-LightItalic},%
+          FontFace={sb}{n}{OpenSans-SemiBold},%
+          FontFace={sb}{it}{OpenSans-SemiBoldItalic},%
+          FontFace={eb}{n}{OpenSans-ExtraBold},%
+          FontFace={eb}{it}{OpenSans-ExtraBoldItalic}%
+        ]
+        \setsansfont{OpenSans}[%
+          Scale=0.96,%
+          FontFace={l}{n}{OpenSans-Light},%
+          FontFace={l}{it}{OpenSans-LightItalic},%
+          FontFace={sb}{n}{OpenSans-SemiBold},%
+          FontFace={sb}{it}{OpenSans-SemiBoldItalic},%
+          FontFace={eb}{n}{OpenSans-ExtraBold},%
+          FontFace={eb}{it}{OpenSans-ExtraBoldItalic}%
+        ]
+        \setmonofont{Inconsolatazi4}
+      \fi
+    \fi
+    \setmainjfont{HaranoAjiGothic}[%
+      FontFace={l}{n}{HaranoAjiGothic-Light},%
+      FontFace={sb}{n}{HaranoAjiGothic-Medium},%
+      FontFace={eb}{n}{HaranoAjiGothic-Heavy}%
     ]
     \setsansjfont{HaranoAjiGothic}[%
       FontFace={l}{n}{HaranoAjiGothic-Light},%
-      FontFace={sb}{n}{HaranoAjiGothic-Medium}%
+      FontFace={sb}{n}{HaranoAjiGothic-Medium},%
+      FontFace={eb}{n}{HaranoAjiGothic-Heavy}%
     ]
-    \DeclareRobustCommand\sbseries{\fontseries{sb}\selectfont}
+    \NewDocumentCommand{\sbseries}{}{\fontseries{sb}\selectfont}
     \DeclareTextFontCommand{\textsb}{\sbseries}
-  \fi
-\else
-  \if@platex
-    \RequirePackage[expert,deluxe]{otf}
-    \RequirePackage[T1]{fontenc}
-    \RequirePackage[math]{iwona}
-    \RequirePackage{amsmath,amssymb,amsthm}
-    \RequirePackage{mathtools}
-    \RequirePackage{bm}
   \else
-    \if@uplatex
-      \RequirePackage[expert,deluxe,uplatex]{otf}
+    \if@sk@uplatex
       \RequirePackage[T1]{fontenc}
-      \RequirePackage[math]{iwona}
-      \RequirePackage{amsmath,amssymb,amsthm}
-      \RequirePackage{mathtools}
-      \RequirePackage{bm}
+    \else
+      \if@sk@platex
+        \RequirePackage[T1]{fontenc}
+      \fi
     \fi
   \fi
 \fi
 
-\if@withinsec@mode
+\if@sk@withinsec@mode
   \numberwithin{equation}{section}
 \fi
 
@@ -135,15 +183,16 @@
 \setmaincolor{60,179,113}
 \setaccentcolor{255,69,0}
 
-\if@beamerclass
-  \renewcommand{\familydefault}{\sfdefault}
-  \renewcommand{\kanjifamilydefault}{\gtdefault}
+\if@sk@beamerclass
+  \RenewDocumentCommand\familydefault{}{\sfdefault}
+  \RenewDocumentCommand\kanjifamilydefault{}{\gtdefault}
   \usecolortheme{rose}
   \useinnertheme{circles}
   \setbeamertemplate{headline}[default]
   \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{section in toc}[sections numbered]
   % \setbeamertemplate{subsection in toc}[subsections numbered]
+  % \setbeamertemplate{frametitle}[default][center]
   % \setbeamercolor{structure}{fg=skmpmaincolor}
   \setbeamercolor{title}{fg=skmpmaincolor}
   \setbeamercolor{section title}{fg=skmpmaincolor}
@@ -158,14 +207,17 @@
   \setbeamercolor{block title alerted}{fg=skmpaccentcolor,bg=skmpaccentcolor!25!white}
   \setbeamercolor{block body alerted}{bg=skmpaccentcolor!15!white}
   \setbeamercolor{alerted text}{fg=skmpaccentcolor}
-  \if@notload@theme@mode\else
+  \if@sk@notload@theme@mode
+    \colorlet{skmpbgcolor}{white}
+  \else
+    \colorlet{skmpbgcolor}{black!2}
     \setlength{\metropolis@titleseparator@linewidth}{1pt}
     \setlength{\metropolis@progressonsectionpage@linewidth}{1pt}
     \setlength{\metropolis@progressinheadfoot@linewidth}{3pt}
   \fi
 \fi
 
-\if@notload@siunitx@mode\else
+\if@sk@notload@siunitx@mode\else
   \RequirePackage{siunitx}
 \fi
 
@@ -176,7 +228,7 @@
 \RequirePackage{multirow}
 \RequirePackage{float}
 \RequirePackage{caption}
-\if@normalcaption@mode
+\if@sk@normalcaption@mode
   \captionsetup{%
     format=hang,%
     font=normalsize,%
@@ -190,11 +242,11 @@
   }
 \fi
 \RequirePackage{subcaption}
-\if@withinsec@mode
+\if@sk@withinsec@mode
   \numberwithin{figure}{section}
   \numberwithin{table}{section}
 \fi
-\if@engcaption@mode
+\if@sk@engcaption@mode
   \captionsetup[figure]{name=Figure}
   \captionsetup[table]{name=Table}
 \else
@@ -207,18 +259,23 @@
 \RequirePackage{tcolorbox}
 \tcbuselibrary{theorems,breakable,skins,xparse,hooks,listings}
 
-\if@lualatex
+\if@sk@lualatex
   \RequirePackage{listings}
 \else
   \RequirePackage{listings,jvlisting}
 \fi
-\if@engcaption@mode
-  \renewcommand{\lstlistingname}{Listing}
+\if@sk@engcaption@mode
+  \RenewDocumentCommand\lstlistingname{}{Listing}
 \else
-  \renewcommand{\lstlistingname}{リスト}
+  \RenewDocumentCommand\lstlistingname{}{リスト}
 \fi
-\if@withinsec@mode
-  \AtBeginDocument{\renewcommand{\thelstlisting}{\arabic{section}.\arabic{lstlisting}}\@addtoreset{lstlisting}{section}}
+\if@sk@withinsec@mode
+  \AtBeginDocument{%
+    \RenewDocumentCommand\thelstlisting{}{%
+      \arabic{section}.\arabic{lstlisting}%
+    }%
+    \@addtoreset{lstlisting}{section}%
+  }
 \fi
 \lstset{%
   breaklines=true,%
@@ -232,13 +289,20 @@
   lineskip=-0.5ex,%
   keepspaces=true%
 }
+\if@sk@firasans@mode
+  \lstset{%
+    numberstyle=\ttfamily\tiny,%
+    basewidth=0.55em,%
+    lineskip=-0.25ex%
+  }
+\fi
 
 \ProvideDocumentCommand\ffrac{m m}{\mathord{#1}\mathord{/}\mathord{#2}}
 \DeclareDocumentCommand\skffrac{m m}{\mathord{#1}\mathord{/}\mathord{#2}}
 \ProvideDocumentCommand\dsdash{}{\scalebox{2}[1]{―}}
 \DeclareDocumentCommand\skdsdash{}{\scalebox{2}[1]{―}}
-\ProvideDocumentCommand\dash{+m}{\dsdash#1\dsdash}
-\DeclareDocumentCommand\skdash{+m}{\skdsdash#1\skdsdash}
+\ProvideDocumentCommand\dash{+m}{\dsdash #1\dsdash}
+\DeclareDocumentCommand\skdash{+m}{\skdsdash #1\skdsdash}
 \ProvideDocumentCommand\jpntoday{}{\number\year 年\number\month 月\number\day 日}
 \DeclareDocumentCommand\skjpntoday{}{\number\year 年\number\month 月\number\day 日}
 \RenewDocumentCommand\emph{+m}{{\sffamily\gtfamily\bfseries #1}}
