@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{skmetro}[2023/07/10 SKu]
+\ProvidesPackage{skmetro}[2023/07/24 SKu]
 \RequirePackage{graphicx,xcolor}
 
 \newif\if@sk@platex
@@ -271,7 +271,7 @@
 \fi
 \if@sk@withinsec@mode
   \AtBeginDocument{%
-    \RenewDocumentCommand\thelstlisting{}{%
+    \RenewExpandableDocumentCommand\thelstlisting{}{%
       \arabic{section}.\arabic{lstlisting}%
     }%
     \@addtoreset{lstlisting}{section}%
